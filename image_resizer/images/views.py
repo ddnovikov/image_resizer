@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from .models import Image
@@ -13,4 +14,13 @@ def images_upload(request):
 
 
 def images_resize(request, image_hash):
-    pass
+    width = request.GET.get('width')
+    height = request.GET.get('height')
+
+    image = Image.objects.filter(image_hash=image_hash).first()
+    pil_obj = image.get_resized(width, height)
+
+    response = HttpResponse(content_type='image/jpg')
+    pil_obj.save(response, 'JPEG')
+
+    return response

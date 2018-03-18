@@ -1,5 +1,7 @@
 import os
 
+from PIL import Image as PILImage
+
 from django.db import models
 from django.urls import reverse
 
@@ -43,3 +45,13 @@ class Image(models.Model):
 
     def get_absolute_url(self):
         return reverse('images:resize', kwargs={'image_hash': self.image_hash})
+
+    def get_resized(self, width=None, height=None):
+        if width is None:
+            width = self.width
+        if height is None:
+            height = self.height
+
+        pil_obj = PILImage.open(self.image.path)
+        pil_obj.thumbnail((int(width), int(height)))
+        return pil_obj

@@ -12,7 +12,7 @@
     <div class="col-md-8">
       {% for img in image_list %}
         <div class="row justify-content-between">
-          <a href="">{{ img.image_hash }}</a>
+          <a href="{{ img.get_absolute_url }}">{{ img.image_hash }}</a>
         </div>
       {% endfor %}
     </div>
