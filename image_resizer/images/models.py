@@ -34,6 +34,7 @@ class Image(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        hash_ = generate_hash(self)
-        self.image_hash = hash_
+        if self.pk is None:
+            hash_ = generate_hash(self)
+            self.image_hash = hash_
         super(Image, self).save(*args, **kwargs)
