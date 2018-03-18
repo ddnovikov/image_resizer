@@ -1,6 +1,7 @@
 import os
 
 from django.db import models
+from django.urls import reverse
 
 from .exceptions import AlreadyExistsError
 from .utils import generate_hash
@@ -39,3 +40,6 @@ class Image(models.Model):
             if Image.objects.filter(image_hash=hash_):
                 raise AlreadyExistsError('Image already exists.')
         super(Image, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('images:resize', kwargs={'image_hash': self.image_hash})

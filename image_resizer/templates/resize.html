@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div id="list-main" class="container">
+    <div class="col-md-8">
+      <a href="">{{ img.image.url }}</a>
+    </div>
+  </div>
+{% endblock content %}

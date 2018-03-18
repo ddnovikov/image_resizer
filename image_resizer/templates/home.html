@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div id="list-main" class="container">
+    <h1 class="h1">Список изображений</h1>
+    <hr/>
+    <div class="col-md-8">
+      {% for img in image_list %}
+        <div class="row justify-content-between">
+          <a href="">{{ img.image_hash }}</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}

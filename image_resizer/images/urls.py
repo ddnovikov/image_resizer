@@ -2,7 +2,8 @@ from django.urls import path, re_path
 
 from . import views
 
-app_name = 'places'
+app_name = 'images'
+
 
 urlpatterns = [
     path('', views.images_home, name='home'),
