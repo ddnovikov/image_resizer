@@ -102,3 +102,5 @@ ENV/
 
 # ide files
 .idea/
+
+db.sqlite3

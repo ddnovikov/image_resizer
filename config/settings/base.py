@@ -84,7 +84,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATICFILES_DIRS = [BASE_DIR / 'mesta' / 'static']
+STATICFILES_DIRS = [BASE_DIR / 'image_resizer' / 'static']
 
 
 CORS_REPLACE_HTTPS_REFERER = False
