@@ -1,7 +1,11 @@
 import os
+import urllib
+
+from io import BytesIO
 
 import PIL
 
+from django.core.files import File
 from django.db import models
 from django.urls import reverse
 
@@ -36,15 +40,31 @@ class Image(models.Model):
         return self.image_hash
 
     def save(self, *args, **kwargs):
-        if self.pk is None:
-            hash_ = generate_hash(self)
+        if self.pk is None and not self.image_hash:
+            hash_ = generate_hash(self.image.chunks())
             self.image_hash = hash_
-            if Image.objects.filter(image_hash=hash_):
+
+        if self.pk is None and self.image_hash:
+            print(vars(self))
+            if Image.objects.filter(image_hash=self.image_hash):
                 raise AlreadyExistsError('Image already exists.')
+
         super(Image, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('images:resize', kwargs={'image_hash': self.image_hash})
+
+    @classmethod
+    def save_from_url(cls, url):
+        response = urllib.request.urlopen(url)
+
+        image = File(BytesIO(response.read()))
+        image_hash = generate_hash(image.chunks())
+        filename = urllib.parse.urlparse(url).path.split('/')[-1]
+
+        image_instance = cls(image_hash=image_hash)
+        image_instance.image.save(filename, image)
+        return image_instance
 
     def get_resized(self, width=None, height=None):
         if width is None:

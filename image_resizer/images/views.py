@@ -14,18 +14,23 @@ def images_home(request):
 
 def images_upload(request):
     image_form = ImageForm(request.POST or None, request.FILES or None)
-    print(request.FILES)
-    if request.method == 'POST':
-        if image_form.is_valid() and request.FILES:
-            image = image_form.cleaned_data['image']
-            image_instance = Image(image=image)
 
+    if request.method == 'POST':
+        if image_form.is_valid():
             try:
-                image_instance.save()
+                if image_form.cleaned_data['image']:
+                    image = image_form.cleaned_data['image']
+                    image_instance = Image(image=image)
+                    image_instance.save()
+
+                elif image_form.cleaned_data['url']:
+                    url = image_form.cleaned_data['url']
+                    Image.save_from_url(url)
+
             except AlreadyExistsError:
-                return HttpResponse('В системе уже есть точно такое же изображение. '
-                                    'Загрузка одинаковых изображений запрещена.',
-                                    status=405)
+                messages.error(request, 'В системе уже есть точно такое же изображение. '
+                                        'Загрузка одинаковых изображений запрещена.')
+                return redirect('images:upload')
 
             messages.success(request, 'Изображение успешно загружено.')
             return redirect('images:home')
