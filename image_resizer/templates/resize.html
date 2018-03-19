@@ -7,10 +7,35 @@
 
 {% block content %}
   <div id="list-main" class="container">
-    <div class="col-md-8">
+    <div class="col-md-8 offset-md-2">
       <h1 class="h1">Полученное изображение</h1>
       <hr/>
-      <img src="{% url 'images:get-resized' image_hash=image_hash %}?width={{ width }}&height={{ height }}">
+      <img class='img-fluid' src="{% url 'images:get-resized' image_hash=image_hash %}?width={{ width }}&height={{ height }}&size={{ size }}">
+      <br/>
+      <br/>
+      <form method="GET" action="{% url 'images:resize' image_hash=image_hash %}">
+        <div class="form-group row">
+          <label for="width-f" class="col-sm-3">Ширина (в пикселях): </label>
+          <div class="col-sm-9">
+            <input type="text" name='width' id="width-f" value="{{ width }}" />
+          </div>
+        </div>
+        <div class="form-group row">
+        <label for="height-f" class="col-sm-3">Высота (в пикселях): </label>
+        <div class="col-sm-9">
+          <input type="text" name='height' id="height-f" value="{{ height }}" />
+        </div>
+        </div>
+        <div class="form-group row">
+        <label for="width-f" class="col-sm-3">Ограничение размера (в килобайтах): </label>
+        <div class="col-sm-9">
+          <input type="text" name='size' id="width-f" value="{{ size }}" />
+        </div>
+        </div>
+        <div id="place_submit" class="text-center">
+          <button type="submit" class="btn btn-primary btn-lg">{{ submit_value }}</button>
+        </div>
+      </form>
     </div>
   </div>
 {% endblock content %}

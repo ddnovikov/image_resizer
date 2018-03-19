@@ -66,12 +66,40 @@ class Image(models.Model):
         image_instance.image.save(filename, image)
         return image_instance
 
-    def get_resized(self, width=None, height=None):
+    def get_resized(self, width=None, height=None, size=None):
         if width is None:
             width = self.width
         if height is None:
             height = self.height
 
         pil_obj = PIL.Image.open(self.image.path)
-        pil_obj = pil_obj.resize((int(width), int(height)), PIL.Image.ANTIALIAS)
+        pil_obj = pil_obj.resize((width, height), PIL.Image.ANTIALIAS)
+
+        lower_border, upper_border, prev_size = 0, 100, -1
+
+        if size is not None:
+            size = size * 1000
+
+            while lower_border < upper_border:
+                middle = (upper_border + lower_border) // 2
+
+                tmp = BytesIO()
+                pil_obj.save(tmp, 'JPEG', optimize=True, quality=middle)
+                cur_size = tmp.tell()
+
+                if cur_size == prev_size or middle == 1:
+                    break
+                if cur_size < size:
+                    lower_border = middle
+                else:
+                    upper_border = middle
+                prev_size = cur_size
+
+            pil_obj = tmp.getvalue()
+
+        else:
+            tmp = BytesIO()
+            pil_obj.save(tmp, 'JPEG')
+            pil_obj = tmp.getvalue()
+
         return pil_obj

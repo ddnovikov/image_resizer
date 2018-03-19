@@ -45,14 +45,15 @@ def images_upload(request):
 
 
 def images_get_resized(request, image_hash):
-    width = request.GET.get('width') or None
-    height = request.GET.get('height') or None
+    width = int(request.GET.get('width')) if request.GET.get('width') else None
+    height = int(request.GET.get('height')) if request.GET.get('height') else None
+    size = int(request.GET.get('size')) if request.GET.get('size') else None
 
     image = Image.objects.filter(image_hash=image_hash).first()
-    pil_obj = image.get_resized(width, height)
+    buffer = image.get_resized(width, height, size)
 
     response = HttpResponse(content_type='image/jpg')
-    pil_obj.save(response, 'JPEG')
+    response.write(buffer)
 
     return response
 
@@ -60,10 +61,13 @@ def images_get_resized(request, image_hash):
 def images_resize(request, image_hash):
     width = request.GET.get('width') or ''
     height = request.GET.get('height') or ''
+    size = request.GET.get('size') or ''
 
     context = {'width': width,
                'height': height,
-               'image_hash': image_hash
+               'size': size,
+               'image_hash': image_hash,
+               'submit_value': 'Изменить размер',
     }
 
     return render(request, 'resize.html', context=context)
