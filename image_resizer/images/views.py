@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 
 from .exceptions import AlreadyExistsError
@@ -50,6 +50,9 @@ def images_get_resized(request, image_hash):
     size = int(request.GET.get('size')) if request.GET.get('size') else None
 
     image = Image.objects.filter(image_hash=image_hash).first()
+    if not image:
+        return Http404('Изображения с таким хэшем не существует.')
+
     buffer = image.get_resized(width, height, size)
 
     response = HttpResponse(content_type='image/jpg')

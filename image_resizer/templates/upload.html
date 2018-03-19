@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block head_title %}Загрузить | Resizer{% endblock head_title %}
 
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'css/upload.css' %}">
+{% endblock %}
+
 {% block content %}
-  <div id="list-main" class="container">
+  <div class="container main-container">
     <div class="col-md-8 offset-md-2">
       <h1 class="h1">{{ title }}</h1>
       <hr/>
