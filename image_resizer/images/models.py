@@ -1,6 +1,6 @@
 import os
 
-from PIL import Image as PILImage
+import PIL
 
 from django.db import models
 from django.urls import reverse
@@ -52,6 +52,6 @@ class Image(models.Model):
         if height is None:
             height = self.height
 
-        pil_obj = PILImage.open(self.image.path)
-        pil_obj.thumbnail((int(width), int(height)))
+        pil_obj = PIL.Image.open(self.image.path)
+        pil_obj = pil_obj.resize((int(width), int(height)), PIL.Image.ANTIALIAS)
         return pil_obj

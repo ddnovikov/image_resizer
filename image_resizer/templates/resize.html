@@ -8,7 +8,9 @@
 {% block content %}
   <div id="list-main" class="container">
     <div class="col-md-8">
-      <a href="">{{ img.image.url }}</a>
+      <h1 class="h1">Полученное изображение</h1>
+      <hr/>
+      <img src="{% url 'images:get-resized' image_hash=image_hash %}?width={{ width }}&height={{ height }}">
     </div>
   </div>
 {% endblock content %}
