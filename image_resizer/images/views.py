@@ -50,8 +50,9 @@ def images_get_resized(request, image_hash):
     size = int(request.GET.get('size')) if request.GET.get('size') else None
 
     image = Image.objects.filter(image_hash=image_hash).first()
-    if not image:
-        return Http404('Изображения с таким хэшем не существует.')
+
+    if image is None:
+        raise Http404('Изображения с таким хэшем не существует.')
 
     buffer = image.get_resized(width, height, size)
 
@@ -65,6 +66,11 @@ def images_resize(request, image_hash):
     width = request.GET.get('width') or ''
     height = request.GET.get('height') or ''
     size = request.GET.get('size') or ''
+
+    image = Image.objects.filter(image_hash=image_hash).first()
+
+    if image is None:
+        raise Http404('Изображения с таким хэшем не существует.')
 
     context = {'width': width,
                'height': height,
